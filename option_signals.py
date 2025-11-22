@@ -135,7 +135,7 @@ class AdvancedOptionSignalGenerator:
             if option_type == 'CE':
                 if 'CE' in item and strike >= current_price:  # OTM or ATM CE
                     ce_data = item['CE']
-                            candidate_strikes = []
+                            candidate_strikes = ({
 
         for item in relevant_data:
             strike = item['strikePrice']
