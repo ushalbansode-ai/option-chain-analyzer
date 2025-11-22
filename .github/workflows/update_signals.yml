@@ -3,7 +3,7 @@ name: Update Option Signals
 on:
   schedule:
     - cron: '*/5 9-16 * * 1-5'  # Every 5 minutes from 9 AM to 4 PM, Monday to Friday
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:
   push:
     branches: [ main ]
 
@@ -29,11 +29,13 @@ jobs:
         
     - name: Run option signals analysis
       run: python option_signals.py
+      env:
+        TZ: 'Asia/Kolkata'
       
     - name: Commit and push changes
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add output/ docs/
-        git diff --staged --quiet || git commit -m "🤖 Auto-update: Option signals and dashboard $(date +'%Y-%m-%d %H:%M')"
+        git diff --staged --quiet || git commit -m "🤖 Auto-update: Option signals $(date +'%Y-%m-%d %H:%M')"
         git push
