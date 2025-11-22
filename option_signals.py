@@ -84,10 +84,7 @@ class AdvancedOptionSignalGenerator:
             'data': relevant_data,
             'all_data': option_data
         }
-
-
-
-      def calculate_pcr(self, data):
+     def calculate_pcr(self, data):
         """Calculate Put-Call Ratio with OI and Volume"""
         if not data:
             return 0, 0
