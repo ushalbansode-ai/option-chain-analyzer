@@ -258,7 +258,7 @@ class AdvancedOptionSignalGenerator:
         except Exception as e:
             print(f"{PRINT_PREFIX} ❌ Error selecting strike: {str(e)}")
             return None
-                def get_selection_reason(self, candidate):
+    def get_selection_reason(self, candidate):
         """Translate candidate metrics into human-readable reasons."""
         reasons = []
         if candidate.get('is_atm'):
