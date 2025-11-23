@@ -4,8 +4,7 @@ on:
   push:
     branches: [ main ]
   schedule:
-    - cron: "*/15 3-10 * * 1-5"   # Every 15 min, 9AM–4PM IST (UTC+5:30 → 3:30 to 10:30)
-  workflow_dispatch:
+    - cron: "*/15 9-16 * * 1-5"
 
 jobs:
   update-signals:
@@ -25,11 +24,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install pandas requests numpy
 
-    - name: Run Option Signals Script
-      run: |
-        python option_signals.py
+    - name: Create signals directory
+      run: mkdir -p signals
 
-    - name: Commit and Push Changes
+    - name: Run Option Signals Script
+      run: python option_signals.py
+
+    - name: Commit and push changes
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
