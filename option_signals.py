@@ -691,5 +691,27 @@ def generate_advanced_dashboard(signals, market_data, out_path="docs/index.html"
     print(f"{PRINT_PREFIX} 🎉 Analysis completed successfully!")
     print(f"{PRINT_PREFIX} ⏰ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
+def main():
+    """Main function to run the option signals system"""
+    print("Starting Option Signals Analysis...")
+    trading_system = LiveOptionTradingSystem()
+    
+    try:
+        signals = trading_system.run_analysis()
+        print("\n" + "="*50)
+        print("OPTION BUYING SIGNALS GENERATED")
+        print("="*50)
+        print(signals.to_string(index=False))
+        
+        # Save signals to file
+        signals.to_csv('signals.csv', index=False)
+        print(f"\nSignals saved to signals.csv at {datetime.now()}")
+        
+    except Exception as e:
+        print(f"Error in main execution: {e}")
+        return 1
+    
+    return 0
+
 if __name__ == "__main__":
-                  main()
+    exit(main())
