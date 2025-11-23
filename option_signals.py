@@ -137,7 +137,7 @@ class AdvancedOptionSignalGenerator:
         pcr_vol = (total_pe_vol / total_ce_vol) if total_ce_vol > 0 else 1.0
         
         return round(pcr_oi, 2), round(pcr_vol, 2)
-            def select_optimal_strike(self, analysis_data, option_type):
+    def select_optimal_strike(self, analysis_data, option_type):
         """Select strike from ATM window using multi-parameter scoring."""
         if not analysis_data:
             return None
@@ -393,7 +393,7 @@ class AdvancedOptionSignalGenerator:
         except Exception as e:
             print(f"{PRINT_PREFIX} ❌ Error generating signal for {analysis_data.get('symbol', 'unknown')}: {str(e)}")
             return None
-                def run_complete_analysis(self):
+    def run_complete_analysis(self):
         """Main loop: fetch, analyze and return signals + market overview."""
         print(f"{PRINT_PREFIX} 🎯 STARTING COMPLETE OPTION CHAIN ANALYSIS...")
         print(f"{PRINT_PREFIX} 📊 Analyzing {len(self.symbols)} symbols...")
@@ -421,7 +421,7 @@ class AdvancedOptionSignalGenerator:
                 continue
 
             analysis = self.analyze_atm_strikes(data, sym)
-            if not analysis:
+           if not analysis:
                 print(f"{PRINT_PREFIX} ❌ No ATM analysis for {sym}")
                 market_data.append({
                     'symbol': sym,
@@ -470,7 +470,7 @@ class AdvancedOptionSignalGenerator:
 
         print(f"{PRINT_PREFIX} 📊 ANALYSIS COMPLETE: {len(all_signals)} signals generated")
         return all_signals, market_data
-        def generate_advanced_dashboard(signals, market_data, out_path="docs/index.html"):
+def generate_advanced_dashboard(signals, market_data, out_path="docs/index.html"):
     """Generate a comprehensive HTML dashboard."""
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     
