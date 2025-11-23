@@ -29,17 +29,16 @@ jobs:
       run: |
         python option_signals.py
 
-    - name: Commit & Push Updated Dashboard + Signals
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+    - name: Commit and push changes
+  run: |
+    git config --local user.email "action@github.com"
+    git config --local user.name "GitHub Action"
 
-        # Add both dashboard + signals
-        git add docs/dashboard.json
-        git add signals/
+    git add signals/
+    git add index.html
 
-        # Always commit if any change exists
-        git diff --staged --quiet || git commit -m "Update dashboard $(date)"
-        git push
+    git diff --staged --quiet || git commit -m "Update signals & dashboard [skip ci]"
+    git push
+    
 
         
