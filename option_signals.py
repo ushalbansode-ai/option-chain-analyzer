@@ -692,4 +692,4 @@ def generate_advanced_dashboard(signals, market_data, out_path="docs/index.html"
     print(f"{PRINT_PREFIX} ⏰ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 if __name__ == "__main__":
-    main()
+     main()
