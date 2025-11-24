@@ -4,97 +4,160 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Advanced NSE Option Signals</title>
-
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-    body { font-family: Arial, sans-serif; background: #f5f7fa; padding: 16px; color:#111; }
-    .card { background: #fff; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-bottom: 16px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 8px; border-bottom: 1px solid #eee; }
-    th { background: #fafafa; text-align: left; }
-    h1, h2 { margin-top: 0; }
+    :root{
+        --bg:#f4f7fb; --card:#ffffff; --muted:#6b7280;
+        --accent:#4f46e5; --good:#16a34a; --bad:#dc2626;
+    }
+    body{font-family:Roboto,Arial,Helvetica,sans-serif;background:var(--bg);color:#111;margin:0;padding:18px}
+    .container{max-width:1100px;margin:0 auto}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    h1{margin:4px 0;font-size:24px}
+    .updated{color:var(--muted);font-size:14px}
+    .top-cards{display:flex;gap:12px;margin:14px 0;flex-wrap:wrap}
+    .card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(15,23,42,0.06);flex:1;min-width:220px}
+    .card h3{margin:0 0 8px 0;font-size:16px}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:600;font-size:13px}
+    .buy-pill{background:#ecfdf5;color:var(--good);border:1px solid rgba(16,185,129,0.12)}
+    .sell-pill{background:#fff1f2;color:var(--bad);border:1px solid rgba(220,38,38,0.08)}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:10px 8px;border-bottom:1px solid #eef2f7;text-align:left;font-size:13px}
+    th{background:transparent;color:var(--muted);font-weight:600}
+    .signal-strong-buy{border-left:6px solid var(--good);background:linear-gradient(90deg, rgba(16,185,129,0.03), transparent)}
+    .signal-strong-sell{border-left:6px solid var(--bad);background:linear-gradient(90deg, rgba(220,38,38,0.03), transparent)}
+    .muted{color:var(--muted);font-size:13px}
+    .highlight{font-weight:700}
+    footer{margin-top:28px;color:var(--muted);font-size:13px}
+    @media(max-width:760px){.top-cards{flex-direction:column}}
 </style>
-
 </head>
 <body>
+<div class="container">
+    <header>
+        <div>
+            <h1>🎯 Advanced NSE Option Signals</h1>
+            <div class="updated" id="updated">Last Updated: —</div>
+        </div>
+        <div class="muted">ATM ±5 | OI • COI • IV • PCR</div>
+    </header>
 
-<h1>Advanced NSE Option Signals</h1>
-<p id="updated"></p>
+    <div class="top-cards" id="topCards">
+        <!-- Top 3 buys / sells inserted here -->
+    </div>
 
-<div class="card">
-    <h2>Signals</h2>
-    <table id="signalsTable">
-        <thead>
-            <tr>
-                <th>Symbol</th><th>Signal</th><th>Opt</th><th>Strike</th><th>ATM</th>
-                <th>LTP</th><th>OI</th><th>COI</th><th>IV</th><th>Score</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</div>
+    <div class="card">
+        <h3>Signals</h3>
+        <table id="signalsTable">
+            <thead>
+                <tr>
+                    <th>Symbol</th><th>Signal</th><th>Opt</th><th>Strike</th><th>ATM</th>
+                    <th>LTP</th><th>OI</th><th>COI</th><th>IV</th><th>Score</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
-<div class="card">
-    <h2>Market Overview</h2>
-    <table id="marketTable">
-        <thead>
-            <tr>
-                <th>Symbol</th><th>Price</th><th>ATM</th><th>Strikes</th><th>Updated</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <div class="card" style="margin-top:12px">
+        <h3>Market Overview</h3>
+        <table id="marketTable">
+            <thead>
+                <tr><th>Symbol</th><th>Price</th><th>ATM</th><th>Strikes</th><th>Updated</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <footer>Built from option-chain data • Auto-updates via GitHub Actions</footer>
 </div>
 
 <script>
-// Load LIVE JSON with anti-cache parameter
-fetch("dashboard.json?v=" + Date.now())
-    .then(res => res.json())
-    .then(data => {
+fetch("docs/dashboard.json?v=" + Date.now())
+.then(res => {
+    if(!res.ok) throw new Error("Failed to load JSON");
+    return res.json();
+})
+.then(data => {
+    document.getElementById("updated").innerText = "Last Updated: " + (data.last_updated || "—");
 
-        document.getElementById("updated").innerText =
-            "Last Updated: " + data.last_updated;
+    // Top cards
+    const top = document.getElementById("topCards");
+    top.innerHTML = "";
 
-        // Signals table
-        let sRows = "";
-        data.signals.forEach(s => {
-            sRows += `
-                <tr>
-                    <td>${s.symbol}</td>
-                    <td>${s.signal}</td>
-                    <td>${s.option_type}</td>
-                    <td>${s.strike}</td>
-                    <td>${s.atm}</td>
-                    <td>${s.ltp}</td>
-                    <td>${s.oi}</td>
-                    <td>${s.coi}</td>
-                    <td>${s.iv}</td>
-                    <td>${s.score}</td>
-                </tr>
-            `;
+    const mkCard = (title, list, isBuy) => {
+        const wrap = document.createElement("div");
+        wrap.className = "card";
+        const h = document.createElement("h3");
+        h.innerText = title;
+        wrap.appendChild(h);
+        if(!list || list.length===0){
+            const p = document.createElement("div"); p.className="muted"; p.innerText="No candidates";
+            wrap.appendChild(p);
+            return wrap;
+        }
+        list.forEach((s, i) => {
+            const row = document.createElement("div");
+            row.style.marginTop = (i===0? "2px":"8px");
+            row.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center">
+                <div><strong>${s.symbol}</strong> <span class="muted">(${s.option_type})</span>
+                    <div class="muted" style="font-size:13px">${s.signal} · Strike ${s.strike} · Score ${s.score}</div>
+                </div>
+                <div style="text-align:right">
+                    <div class="pill ${isBuy? 'buy-pill':'sell-pill'}">${isBuy? 'BUY':'SELL'}</div>
+                    <div class="muted" style="font-size:13px;margin-top:6px">${s.ltp ?? '-'}</div>
+                </div>
+            </div>`;
+            wrap.appendChild(row);
         });
-        document.querySelector("#signalsTable tbody").innerHTML = sRows;
+        return wrap;
+    }
 
-        // Market Overview table
-        let mRows = "";
-        data.market.forEach(m => {
-            mRows += `
-                <tr>
-                    <td>${m.symbol}</td>
-                    <td>${m.price}</td>
-                    <td>${m.atm}</td>
-                    <td>${m.strikes}</td>
-                    <td>${m.updated}</td>
-                </tr>
-            `;
-        });
-        document.querySelector("#marketTable tbody").innerHTML = mRows;
+    top.appendChild(mkCard("Top 3 Buys", data.top_buy || [], true));
+    top.appendChild(mkCard("Top 3 Sells", data.top_sell || [], false));
 
-    })
-    .catch(err => {
-        document.getElementById("updated").innerText = "Failed to load data";
-        console.error(err);
+    // Signals table
+    const tbody = document.querySelector("#signalsTable tbody");
+    tbody.innerHTML = "";
+    (data.signals || []).forEach(s => {
+        const tr = document.createElement("tr");
+        const cls = (s.signal || "").includes("BUY") ? "signal-strong-buy" : (s.signal || "").includes("SELL") ? "signal-strong-sell" : "";
+        if(cls) tr.className = cls;
+        tr.innerHTML = `
+            <td><strong>${s.symbol}</strong></td>
+            <td>${s.signal || "-"}</td>
+            <td>${s.option_type || "-"}</td>
+            <td>${s.strike ?? "-"}</td>
+            <td>${s.atm ?? "-"}</td>
+            <td>${s.ltp ?? "-"}</td>
+            <td>${s.oi ?? "-"}</td>
+            <td>${s.coi ?? "-"}</td>
+            <td>${s.iv ?? "-"}</td>
+            <td>${s.score ?? "-"}</td>
+        `;
+        tbody.appendChild(tr);
     });
-</script>
 
+    // Market table
+    const mbody = document.querySelector("#marketTable tbody");
+    mbody.innerHTML = "";
+    (data.market || []).forEach(m => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${m.symbol}</td>
+            <td>${m.price}</td>
+            <td>${m.atm}</td>
+            <td>${m.strikes}</td>
+            <td>${m.updated}</td>
+        `;
+        mbody.appendChild(tr);
+    });
+
+})
+.catch(err => {
+    document.getElementById("updated").innerText = "Failed to load data";
+    console.error(err);
+});
+</script>
 </body>
 </html>
