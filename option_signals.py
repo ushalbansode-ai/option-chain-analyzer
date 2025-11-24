@@ -3,10 +3,10 @@
 option_signals.py
 Final, fully working version.
 Generates:
- - docs/dashboard.json
- - signals/latest.json
- - option_signals.csv
- - detailed_option_data.csv
+  - docs/dashboard.json
+  - signals/latest.json
+  - option_signals.csv
+  - detailed_option_data.csv
 """
 
 import requests
@@ -16,6 +16,7 @@ import os
 import math
 from datetime import datetime
 import time as time_module
+from zoneinfo import ZoneInfo   # <-- Added for IST time
 
 # -----------------------
 # Config
@@ -30,8 +31,11 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
 
 LIQUIDITY_THRESHOLD = 200   # min volume requirement
 
+# --------------------------------------------
+# TIMESTAMP FUNCTION (Updated to IST)
+# --------------------------------------------
 def now_str(fmt="%Y-%m-%d %H:%M:%S"):
-    return datetime.now().strftime(fmt)
+    return datetime.now(ZoneInfo("Asia/Kolkata")).strftime(fmt)
 
 # --------------------------------------------
 # Helper: safe dictionary read
@@ -313,7 +317,7 @@ class AdvancedOptionSignalGenerator:
             "pcr_oi": pcr_oi,
             "pcr_volume": pcr_vol,
             "oi_ratio": round(oi_ratio, 2),
-            "timestamp": now_str()
+            "timestamp": now_str()   # <-- IST timestamp
         }
 
     # ----------------------------------------------------------------
@@ -367,7 +371,7 @@ class AdvancedOptionSignalGenerator:
         self.save_csv("detailed_option_data.csv", detailed_rows)
 
         final_json = {
-            "last_updated": now_str(),
+            "last_updated": now_str(),   # <-- IST time
             "signals": all_signals,
             "market": [
                 {
@@ -430,4 +434,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-            
+     
