@@ -15,7 +15,7 @@
     "pcr_oi": 0.73,
     "pcr_volume": 0.65,
     "oi_ratio": 0.69,
-    "timestamp": "2025-11-28 02:23:57"
+    "timestamp": "2025-11-28 03:01:36"
   },
   {
     "symbol": "INFY",
@@ -33,7 +33,7 @@
     "pcr_oi": 0.82,
     "pcr_volume": 0.66,
     "oi_ratio": 0.69,
-    "timestamp": "2025-11-28 02:23:59"
+    "timestamp": "2025-11-28 03:01:38"
   },
   {
     "symbol": "HDFCBANK",
@@ -51,7 +51,7 @@
     "pcr_oi": 0.69,
     "pcr_volume": 0.75,
     "oi_ratio": 0.66,
-    "timestamp": "2025-11-28 02:24:00"
+    "timestamp": "2025-11-28 03:01:39"
   },
   {
     "symbol": "BHARTIARTL",
@@ -69,7 +69,7 @@
     "pcr_oi": 0.7,
     "pcr_volume": 0.56,
     "oi_ratio": 0.64,
-    "timestamp": "2025-11-28 02:24:05"
+    "timestamp": "2025-11-28 03:01:43"
   },
   {
     "symbol": "ITC",
@@ -87,7 +87,7 @@
     "pcr_oi": 0.67,
     "pcr_volume": 0.45,
     "oi_ratio": 0.69,
-    "timestamp": "2025-11-28 02:24:06"
+    "timestamp": "2025-11-28 03:01:44"
   },
   {
     "symbol": "HINDUNILVR",
@@ -105,7 +105,7 @@
     "pcr_oi": 0.62,
     "pcr_volume": 0.47,
     "oi_ratio": 0.62,
-    "timestamp": "2025-11-28 02:24:11"
+    "timestamp": "2025-11-28 03:01:50"
   },
   {
     "symbol": "SUNPHARMA",
@@ -123,7 +123,7 @@
     "pcr_oi": 0.75,
     "pcr_volume": 0.46,
     "oi_ratio": 0.62,
-    "timestamp": "2025-11-28 02:24:17"
+    "timestamp": "2025-11-28 03:01:54"
   },
   {
     "symbol": "WIPRO",
@@ -141,6 +141,6 @@
     "pcr_oi": 0.78,
     "pcr_volume": 0.56,
     "oi_ratio": 0.57,
-    "timestamp": "2025-11-28 02:24:18"
+    "timestamp": "2025-11-28 03:01:56"
   }
 ]
