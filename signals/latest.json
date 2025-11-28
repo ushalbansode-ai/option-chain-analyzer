@@ -15,7 +15,7 @@
     "pcr_oi": 0.69,
     "pcr_volume": 0.64,
     "oi_ratio": 0.58,
-    "timestamp": "2025-11-28 19:11:09"
+    "timestamp": "2025-11-28 19:24:15"
   },
   {
     "symbol": "HDFCBANK",
@@ -33,7 +33,7 @@
     "pcr_oi": 0.67,
     "pcr_volume": 0.71,
     "oi_ratio": 0.69,
-    "timestamp": "2025-11-28 19:11:13"
+    "timestamp": "2025-11-28 19:24:19"
   },
   {
     "symbol": "BHARTIARTL",
@@ -43,15 +43,15 @@
     "atm": 2100,
     "distance_from_atm": 0,
     "ltp": 31.7,
-    "oi": 2525,
-    "coi": -256,
+    "oi": 2335,
+    "coi": -446,
     "volume": 4509,
     "iv": 16.28,
-    "score": 66.99,
-    "pcr_oi": 0.66,
+    "score": 66.59,
+    "pcr_oi": 0.65,
     "pcr_volume": 0.63,
-    "oi_ratio": 0.72,
-    "timestamp": "2025-11-28 19:11:21"
+    "oi_ratio": 0.71,
+    "timestamp": "2025-11-28 19:24:23"
   },
   {
     "symbol": "ITC",
@@ -61,15 +61,15 @@
     "atm": 405,
     "distance_from_atm": 1,
     "ltp": 3.9,
-    "oi": 734,
-    "coi": 99,
+    "oi": 731,
+    "coi": 96,
     "volume": 725,
     "iv": 13.06,
     "score": 54.38,
     "pcr_oi": 0.68,
     "pcr_volume": 0.51,
     "oi_ratio": 0.71,
-    "timestamp": "2025-11-28 19:11:22"
+    "timestamp": "2025-11-28 19:24:24"
   },
   {
     "symbol": "HINDUNILVR",
@@ -79,15 +79,15 @@
     "atm": 2460,
     "distance_from_atm": 0,
     "ltp": 16.35,
-    "oi": 2221,
-    "coi": 661,
+    "oi": 2222,
+    "coi": 662,
     "volume": 3996,
     "iv": 9.91,
     "score": 69.56,
     "pcr_oi": 0.67,
     "pcr_volume": 0.42,
     "oi_ratio": 0.73,
-    "timestamp": "2025-11-28 19:11:33"
+    "timestamp": "2025-11-28 19:24:29"
   },
   {
     "symbol": "ADANIENT",
@@ -105,7 +105,7 @@
     "pcr_oi": 0.66,
     "pcr_volume": 0.36,
     "oi_ratio": 0.69,
-    "timestamp": "2025-11-28 19:11:35"
+    "timestamp": "2025-11-28 19:24:31"
   },
   {
     "symbol": "SUNPHARMA",
@@ -115,15 +115,15 @@
     "atm": 1840,
     "distance_from_atm": 1,
     "ltp": 22.7,
-    "oi": 261,
-    "coi": 169,
+    "oi": 295,
+    "coi": 203,
     "volume": 978,
     "iv": 16.25,
-    "score": 54.09,
-    "pcr_oi": 0.75,
+    "score": 54.16,
+    "pcr_oi": 0.76,
     "pcr_volume": 0.43,
-    "oi_ratio": 0.47,
-    "timestamp": "2025-11-28 19:11:38"
+    "oi_ratio": 0.48,
+    "timestamp": "2025-11-28 19:24:33"
   },
   {
     "symbol": "WIPRO",
@@ -133,14 +133,14 @@
     "atm": 250,
     "distance_from_atm": 1,
     "ltp": 4.31,
-    "oi": 373,
-    "coi": 19,
+    "oi": 369,
+    "coi": 15,
     "volume": 340,
     "iv": 21.18,
-    "score": 52.18,
+    "score": 52.17,
     "pcr_oi": 0.74,
     "pcr_volume": 0.38,
     "oi_ratio": 0.57,
-    "timestamp": "2025-11-28 19:11:40"
+    "timestamp": "2025-11-28 19:24:34"
   }
 ]
