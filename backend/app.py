@@ -1,15 +1,17 @@
 from option_chain import option_chain_analyzer
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
-import json
+import os
 
 from nse_data import NSEDataFetcher, DataProcessor
 from analytics import OptionAnalytics
 from config import Config
 
-app = Flask(__name__)
+app = Flask(__name__, 
+           template_folder=os.path.join('..', 'frontend'),
+           static_folder=os.path.join('..', 'frontend'))
 CORS(app)
 
 # Global data storage
@@ -38,16 +40,19 @@ def fetch_and_process_data():
             }
             
             print(f"✅ Updated {symbol} data with {len(analyzed_data['analysis']['strike_data'])} strikes")
-            print(f"   📈 Sentiment Score: {analyzed_data['analysis']['sentiment_score']}")
-            print(f"   🎯 Signals: {len(trading_signals.get('signals', []))} generated")
         else:
             print(f"❌ No data for {symbol}")
 
-# API Routes
+# Serve static files
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory(app.static_folder, path)
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return send_from_directory(app.static_folder, 'index.html')
 
+# API Routes
 @app.route('/api/data/<symbol>')
 def get_symbol_data(symbol):
     if symbol in market_data and market_data[symbol]['analysis']:
@@ -71,12 +76,6 @@ def get_dashboard():
             }
     return jsonify(dashboard_data)
 
-@app.route('/api/signals/<symbol>')
-def get_trading_signals(symbol):
-    if symbol in market_data and market_data[symbol]['signals']:
-        return jsonify(market_data[symbol]['signals'])
-    return jsonify({'error': 'Signals not available'}), 404
-
 @app.route('/api/health')
 def health():
     status = {}
@@ -88,12 +87,19 @@ def health():
         }
     return jsonify(status)
 
-@app.route('/api/historical/<symbol>')
-def get_historical_data(symbol):
-    """Get historical data for trend analysis"""
-    if hasattr(option_chain_analyzer, 'historical_data') and symbol in option_chain_analyzer.historical_data:
-        return jsonify(option_chain_analyzer.historical_data[symbol][-50:])  # Last 50 points
-    return jsonify([])
+@app.route('/api/network')
+def network_info():
+    """Get network information for mobile access"""
+    import socket
+    hostname = socket.gethostname()
+    local_ip = socket.gethostbyname(hostname)
+    
+    return jsonify({
+        'local_ip': local_ip,
+        'hostname': hostname,
+        'port': 5000,
+        'mobile_url': f'http://{local_ip}:5000'
+    })
 
 if __name__ == '__main__':
     # Initial data fetch
@@ -111,7 +117,6 @@ if __name__ == '__main__':
     scheduler.start()
     
     print(f"🔄 Auto-refresh enabled every {Config.REFRESH_INTERVAL} seconds")
-    print("🌐 Dashboard available at: http://localhost:5000")
     
     try:
         app.run(debug=True, host='0.0.0.0', port=5000, use_reloader=False)
