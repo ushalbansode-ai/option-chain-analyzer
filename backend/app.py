@@ -1,17 +1,25 @@
 from option_chain import option_chain_analyzer
-from flask import Flask, jsonify, render_template, send_from_directory
+from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 import os
 
-from nse_data import NSEDataFetcher, DataProcessor
-from analytics import OptionAnalytics
-from config import Config
+# Determine if we're in Codespaces
+IS_CODESPACES = os.getenv('CODESPACE_NAME') is not None
+
+if IS_CODESPACES:
+    # In Codespaces, frontend is in ../frontend
+    template_dir = os.path.join('..', 'frontend')
+    static_dir = os.path.join('..', 'frontend')
+else:
+    # Local development
+    template_dir = os.path.join('..', 'frontend')
+    static_dir = os.path.join('..', 'frontend')
 
 app = Flask(__name__, 
-           template_folder=os.path.join('..', 'frontend'),
-           static_folder=os.path.join('..', 'frontend'))
+           template_folder=template_dir,
+           static_folder=static_dir)
 CORS(app)
 
 # Global data storage
@@ -39,20 +47,20 @@ def fetch_and_process_data():
                 'timestamp': datetime.now().isoformat()
             }
             
-            print(f"✅ Updated {symbol} data with {len(analyzed_data['analysis']['strike_data'])} strikes")
+            print(f"✅ Updated {symbol} data")
         else:
             print(f"❌ No data for {symbol}")
 
-# Serve static files
-@app.route('/<path:path>')
-def serve_static(path):
-    return send_from_directory(app.static_folder, path)
-
+# Serve frontend files
 @app.route('/')
 def index():
     return send_from_directory(app.static_folder, 'index.html')
 
-# API Routes
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory(app.static_folder, path)
+
+# API Routes (keep your existing routes)
 @app.route('/api/data/<symbol>')
 def get_symbol_data(symbol):
     if symbol in market_data and market_data[symbol]['analysis']:
@@ -67,7 +75,7 @@ def get_symbol_data(symbol):
 @app.route('/api/dashboard')
 def get_dashboard():
     dashboard_data = {}
-    for symbol in Config.SYMBOLS:
+    for symbol in ['NIFTY', 'BANKNIFTY']:
         if market_data[symbol]['analysis']:
             dashboard_data[symbol] = {
                 'analysis': market_data[symbol]['analysis'],
@@ -76,34 +84,18 @@ def get_dashboard():
             }
     return jsonify(dashboard_data)
 
-@app.route('/api/health')
-def health():
-    status = {}
-    for symbol in Config.SYMBOLS:
-        status[symbol] = {
-            'last_update': market_data[symbol]['timestamp'],
-            'data_available': market_data[symbol]['data'] is not None,
-            'signals_available': market_data[symbol]['signals'] is not None
-        }
-    return jsonify(status)
-
-@app.route('/api/network')
-def network_info():
-    """Get network information for mobile access"""
-    import socket
-    hostname = socket.gethostname()
-    local_ip = socket.gethostbyname(hostname)
-    
+@app.route('/api/codespaces')
+def codespaces_info():
+    """Codespaces-specific information"""
     return jsonify({
-        'local_ip': local_ip,
-        'hostname': hostname,
-        'port': 5000,
-        'mobile_url': f'http://{local_ip}:5000'
+        'is_codespaces': IS_CODESPACES,
+        'codespace_name': os.getenv('CODESPACE_NAME', 'local'),
+        'domain': os.getenv('GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN', 'localhost'),
+        'external_url': f"https://{os.getenv('CODESPACE_NAME', 'local')}-5000.{os.getenv('GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN', 'localhost')}"
     })
 
 if __name__ == '__main__':
     # Initial data fetch
-    print("🚀 Starting Option Chain Analyzer...")
     fetch_and_process_data()
     
     # Setup scheduler
@@ -111,15 +103,12 @@ if __name__ == '__main__':
     scheduler.add_job(
         func=fetch_and_process_data,
         trigger="interval",
-        seconds=Config.REFRESH_INTERVAL,
+        seconds=30,
         id='data_fetcher'
     )
     scheduler.start()
     
-    print(f"🔄 Auto-refresh enabled every {Config.REFRESH_INTERVAL} seconds")
-    
     try:
-        app.run(debug=True, host='0.0.0.0', port=5000, use_reloader=False)
+        app.run(debug=False, host='0.0.0.0', port=5000, use_reloader=False)
     except (KeyboardInterrupt, SystemExit):
-        print("\n👋 Shutting down Option Chain Analyzer...")
         scheduler.shutdown()
